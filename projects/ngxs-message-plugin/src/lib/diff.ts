@@ -53,7 +53,10 @@ function* _getDiff<T>(prev: T, current: T, visited: WeakSet<any>, existingKey: s
                 continue;
             }
 
-            if (!(propKey in current) || typeof current[propKey] === 'undefined' || current[propKey] === null) {
+            if (prev[propKey] === null) {
+                if (current[propKey] === null) continue;
+                yield { key, operation: 'add', value: current[propKey] };
+            } else if (!(propKey in current) || typeof current[propKey] === 'undefined' || current[propKey] === null) {
                 yield { key, operation: 'remove' };
             } else if (typeof prev[propKey] !== typeof current[propKey]) {
                 yield { key, operation: 'update', value: current[propKey] };

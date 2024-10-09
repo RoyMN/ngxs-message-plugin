@@ -166,4 +166,29 @@ describe('DiffAlgorithm', () => {
         console.log('diff', Array.from(diff));
         expect(applyDiff(prev, diff)).toEqual(next);
     });
+
+    it(`should be able to add object to props that are null even though they shouldn't be`, () => {
+        class Foo {
+            foo: string;
+            bar: Bar;
+            constructor(foo: string, bar: Bar) {
+                this.foo = foo; this.bar = bar;
+            }
+        }
+        class Bar {
+            bar: string;
+            constructor(bar: string) { this.bar = bar; }
+        }
+        const prev: Foo = {
+            foo: 'foo',
+            bar: null!
+        };
+        const next: Foo = {
+            foo: 'bar',
+            bar: { bar: 'foo' }
+        };
+        const diff = Array.from(getDiff(prev, next));
+        console.log('diff', Array.from(diff));
+        expect(applyDiff(prev, diff)).toEqual(next);
+    });
   });
